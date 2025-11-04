@@ -1,13 +1,23 @@
 
 
 % Ejercicio 1
-matriz(F, C, M) :- completar("Ejercicio 1").
+matriz(0,_,[]).
+matriz(1,C,[R]) :- length(R, C).
+matriz(F, C, [H|T]) :- length(H, C), X is F-1, matriz(X, C, T).
 
 % Ejercicio 2
-replicar(X, N, L) :- completar("Ejercicio 2").
+replicar(_, 0, []).
+replicar(E, N, [E|L]) :- X is N-1, replicar(E,X,L).
 
 % Ejercicio 3
-transponer(_, _) :- completar("Ejercicio 3").
+primeras_n_columnas([], _, []).
+primeras_n_columnas([FILA|M], N, COL) :- nth1(N, FILA, X), append([X], C, COL), nth_columna(M,N,C).
+
+reverse([],[]).
+reverse([E|LS], REV) :- reverse(LS, X), append(X, [E], REV).
+
+transponer([], []).
+transponer([FILA|M], MT) :- length(FILA, N), primeras_n_columnas([FILA|M], N, MATRIZ), reverse(MATRIZ, MT).
 
 % Predicado dado armarNono/3
 armarNono(RF, RC, nono(M, RS)) :-
