@@ -10,14 +10,17 @@ replicar(_, 0, []).
 replicar(E, N, [E|L]) :- X is N-1, replicar(E,X,L).
 
 % Ejercicio 3
-primeras_n_columnas([], _, []).
-primeras_n_columnas([FILA|M], N, COL) :- nth1(N, FILA, X), append([X], C, COL), nth_columna(M,N,C).
+nth_columna([],_,[]).
+nth_columna([FILA|M], N, [C | COL]) :-  nth1(N, FILA, C), nth_columna(M,N,COL).
+
+primeras_n_columnas(_,0,[]).
+primeras_n_columnas(M,N,[C|COLS]) :- NS is N-1, nth_columna(M,N,C), primeras_n_columnas(M,NS,COLS).
 
 reverse([],[]).
-reverse([E|LS], REV) :- reverse(LS, X), append(X, [E], REV).
+reverse([E|LS], REV) :- reverse(LS,X), append(X,[E],REV).
 
-transponer([], []).
-transponer([FILA|M], MT) :- length(FILA, N), primeras_n_columnas([FILA|M], N, MATRIZ), reverse(MATRIZ, MT).
+transponer([],[]).
+transponer([FILA|M], MT) :- length(FILA,N), primeras_n_columnas([FILA|M],N,MATRIZ), reverse(MATRIZ, MT).
 
 % Predicado dado armarNono/3
 armarNono(RF, RC, nono(M, RS)) :-
@@ -33,7 +36,16 @@ zipR([], [], []).
 zipR([R|RT], [L|LT], [r(R,L)|T]) :- zipR(RT, LT, T).
 
 % Ejercicio 4
-pintadasValidas(_) :- completar("Ejercicio 4").
+suma_reestricciones(r(XS, _), SUMA) :- sum_list(XS, SUMA).
+
+cantidad_blancos(r(XS, L), X) :- length(L, LEN),
+	suma_reestricciones(r(XS, L), SUM_R),
+	X is LEN - SUM_R.
+
+pintadasValidas(r([], R)) :- length(R, LEN), replicar(o, LEN, R).
+
+
+
 
 % Ejercicio 5
 resolverNaive(_) :-  completar("Ejercicio 5").
