@@ -68,7 +68,8 @@ pintadasValidas(r(R, [L|Ls]), NO, MB) :-
 	pintadasValidas(r(R, Ls), NNO, NMB).
 
 % Ejercicio 5
-resolverNaive(_) :-  completar("Ejercicio 5").
+resolverNaive(nono(_, R)) :- maplist(pintadasValidas, R). 
+
 
 % Ejercicio 6
 pintarObligatorias(_) :- completar("Ejercicio 6").
