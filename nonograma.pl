@@ -42,10 +42,30 @@ cantidad_blancos(r(XS, L), X) :- length(L, LEN),
 	suma_reestricciones(r(XS, L), SUM_R),
 	X is LEN - SUM_R.
 
-pintadasValidas(r([], R)) :- length(R, LEN), replicar(o, LEN, R).
+pintadasValidas(r(R, L)) :- 
+	cantidad_blancos(r(R,L), MB),
+	between(0, MB, NO),
+	pintadasValidas(r(R, L), NO, MB).
 
+pintadasValidas(r([], L), 0, 0) :- length(L, LEN), replicar(o, LEN, L).
 
+pintadasValidas(r([0], []), 0, _).
 
+pintadasValidas(r([R|Rs], [L|Ls]), 0, MB) :-
+	NR is R-1,
+	L=x,
+	pintadasValidas(r([NR|Rs], Ls), 0, MB).
+
+pintadasValidas(r([0|Rs], L), 0, MB) :-
+	between(1, MB, NO),	
+	pintadasValidas(r(Rs, L), NO, MB).
+
+pintadasValidas(r(R, [L|Ls]), NO, MB) :- 
+	L=o,
+	NMB is MB -1,
+	NO>0,
+	NNO is NO-1,
+	pintadasValidas(r(R, Ls), NNO, NMB).
 
 % Ejercicio 5
 resolverNaive(_) :-  completar("Ejercicio 5").

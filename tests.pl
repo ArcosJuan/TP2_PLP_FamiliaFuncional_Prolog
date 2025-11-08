@@ -18,65 +18,65 @@ test(replicar, [nondet]) :-
     replicar(A, 3, R),
     R =@= [A, A, A].
 
-% test(transponer, [nondet]) :-
-%     transponer([[1]], 
-%                [[1]]).
-% 
-% test(transponer, [nondet]) :-
-%     transponer([[1, 2, 3], 
-%                 [4, 5, 6]], 
-%                [[1, 4], 
-%                 [2, 5], 
-%                 [3, 6]]).
-% 
-% test(transponer, [nondet]) :-
-%     transponer([[1, 2, 3]], 
-%                [[1], 
-%                 [2], 
-%                 [3]]).
-% 
-% test(transponer, [nondet]) :-
-%     transponer([[1], 
-%                 [2], 
-%                 [3]],
-%                [[1, 2, 3]]).
-% 
-% test(pintadasValidas, [nondet]) :-
-%     L = [_, _, _],
-%     soluciones(L, 
-%         pintadasValidas(r([], L)),
-%         [[o,o,o]]).
-% 
-% test(pintadasValidas, [nondet]) :-
-%     L = [_, _, _],
-%     soluciones(L, 
-%         pintadasValidas(r([3], L)),
-%         [[x,x,x]]).
-% 
-% test(pintadasValidas, [nondet]) :-
-%     L = [_, _, _],
-%     soluciones(L, 
-%         pintadasValidas(r([1], L)),
-%         [[o,o,x],[o,x,o],[x,o,o]]).
-% 
-% test(pintadasValidas, [nondet]) :-
-%     L = [_, _, _],
-%     soluciones(L, 
-%         pintadasValidas(r([1,1], L)),
-%         [[x,o,x]]).
-% 
-% test(pintadasValidas, [nondet]) :-
-%     L = [_, _, _],
-%     soluciones(L, 
-%         pintadasValidas(r([2,1], L)), 
-%         []).
-% 
-% test(pintadasValidas, [nondet]) :-
-%     L = [_, _, _],
-%     soluciones(L, 
-%         pintadasValidas(r([2], L)), 
-%         [[x,x,o],[o,x,x]]).
-% 
+test(transponer, [nondet]) :-
+    transponer([[1]], 
+               [[1]]).
+
+test(transponer, [nondet]) :-
+    transponer([[1, 2, 3], 
+                [4, 5, 6]], 
+               [[1, 4], 
+                [2, 5], 
+                [3, 6]]).
+
+test(transponer, [nondet]) :-
+    transponer([[1, 2, 3]], 
+               [[1], 
+                [2], 
+                [3]]).
+
+test(transponer, [nondet]) :-
+    transponer([[1], 
+                [2], 
+                [3]],
+               [[1, 2, 3]]).
+
+test(pintadasValidas, [nondet]) :-
+    L = [_, _, _],
+    soluciones(L, 
+        pintadasValidas(r([], L)),
+        [[o,o,o]]).
+
+test(pintadasValidas, [nondet]) :-
+    L = [_, _, _],
+    soluciones(L, 
+        pintadasValidas(r([3], L)),
+        [[x,x,x]]).
+
+test(pintadasValidas, [nondet]) :-
+    L = [_, _, _],
+    soluciones(L, 
+        pintadasValidas(r([1], L)),
+        [[o,o,x],[o,x,o],[x,o,o]]).
+
+test(pintadasValidas, [nondet]) :-
+    L = [_, _, _],
+    soluciones(L, 
+        pintadasValidas(r([1,1], L)),
+        [[x,o,x]]).
+
+test(pintadasValidas, [nondet]) :-
+    L = [_, _, _],
+    soluciones(L, 
+        pintadasValidas(r([2,1], L)), 
+        []).
+
+test(pintadasValidas, [nondet]) :-
+    L = [_, _, _],
+    soluciones(L, 
+        pintadasValidas(r([2], L)), 
+        [[x,x,o],[o,x,x]]).
+
 % test(resolverNaive, [nondet]) :-
 %     armarNono([[1],[1]], [[1],[1]], NN), NN=nono(M, _),
 %     soluciones(M, resolverNaive(NN), 
@@ -195,14 +195,14 @@ test(replicar, [nondet]) :-
 % % Similar a findall/3 pero compara con un conjunto 
 % % esperado independientemente del orden.
 % % Acepta soluciones parcialmente instanciadas, se comparan con =@=/2.
-% soluciones(L, G, S) :- 
-%     findall(L, G, LS), 
-%     msort(LS, LSS), 
-%     msort(S, SS),
-%     (LSS =@= SS;
-%      format('Esperado: ~w~nActual: ~w~n', [S, LS]),
-%      fail).
-% 
-% :- end_tests(nonograma).
-% 
-% 
+soluciones(L, G, S) :- 
+    findall(L, G, LS), 
+    msort(LS, LSS), 
+    msort(S, SS),
+    (LSS =@= SS;
+     format('Esperado: ~w~nActual: ~w~n', [S, LS]),
+     fail).
+
+:- end_tests(nonograma).
+
+
