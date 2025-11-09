@@ -1,4 +1,3 @@
-
 :- begin_tests(nonograma).
 :- ensure_loaded(nonograma).
 
@@ -77,48 +76,48 @@ test(pintadasValidas, [nondet]) :-
         pintadasValidas(r([2], L)), 
         [[x,x,o],[o,x,x]]).
 
-% test(resolverNaive, [nondet]) :-
-%     armarNono([[1],[1]], [[1],[1]], NN), NN=nono(M, _),
-%     soluciones(M, resolverNaive(NN), 
-%         [[[o,x], % solución A
-%           [x,o]],
-%          [[x,o], % solución B
-%           [o,x]]
-%         ]).
-% 
-% test(resolverNaive, [nondet]) :-
-%     nn(0, NN), NN=nono(M, _),
-%     soluciones(M, resolverNaive(NN), 
-%         [[[o,x,o], % única solución
-%           [o,x,x]]
-%         ]).
-% 
-% test(pintarObligatorias, [nondet]) :-
-%     L = [_, _, _],
-%     soluciones(L, 
-%         pintarObligatorias(r([3], L)), 
-%         [[x,x,x]]).
-% 
-% test(pintarObligatorias, [nondet]) :-
-%     L = [_, _, _],
-%     soluciones(L, 
-%         pintarObligatorias(r([], L)), 
-%         [[o,o,o]]).
-% 
-% test(pintarObligatorias, [nondet]) :-
-%     L = [A, _, C],
-%     soluciones(L, 
-%         pintarObligatorias(r([2], L)), 
-%         [[A,x,C]]).
-% 
-% test(deducir1Pasada, [nondet]) :-
-%     armarNono([[2],[3],[2]], [[2],[3],[2]], NN), NN=nono(M, _),
-%     soluciones(M, deducir1Pasada(NN), 
-%         [[[_,x,_],
-%           [x,x,x],
-%           [_,x,_]]
-%         ]).
-% 
+test(resolverNaive, [nondet]) :-
+    armarNono([[1],[1]], [[1],[1]], NN), NN=nono(M, _),
+    soluciones(M, resolverNaive(NN), 
+        [[[o,x], % solución A
+          [x,o]],
+         [[x,o], % solución B
+          [o,x]]
+        ]).
+
+test(resolverNaive, [nondet]) :-
+    nn(0, NN), NN=nono(M, _),
+    soluciones(M, resolverNaive(NN), 
+        [[[o,x,o], % única solución
+          [o,x,x]]
+        ]).
+
+test(pintarObligatorias, [nondet]) :-
+    L = [_, _, _],
+    soluciones(L, 
+        pintarObligatorias(r([3], L)), 
+        [[x,x,x]]).
+
+test(pintarObligatorias, [nondet]) :-
+    L = [_, _, _],
+    soluciones(L, 
+        pintarObligatorias(r([], L)), 
+        [[o,o,o]]).
+
+test(pintarObligatorias, [nondet]) :-
+    L = [A, _, C],
+    soluciones(L, 
+        pintarObligatorias(r([2], L)), 
+        [[A,x,C]]).
+
+test(deducir1Pasada, [nondet]) :-
+    armarNono([[2],[3],[2]], [[2],[3],[2]], NN), NN=nono(M, _),
+    soluciones(M, deducir1Pasada(NN), 
+        [[[_,x,_],
+          [x,x,x],
+          [_,x,_]]
+        ]).
+
 % test(deducirVariasPasadas, [nondet]) :-
 %     % con deducir1Pasada no se resuelve del todo 
 %     nn(3, NN1), deducir1Pasada(NN1), cantidadVariablesLibres(NN1, NNV1), NNV1 > 0,
