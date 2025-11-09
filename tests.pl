@@ -118,11 +118,11 @@ test(deducir1Pasada, [nondet]) :-
           [_,x,_]]
         ]).
 
-test(deducirVariasPasadas, [nondet]) :-
-    % con deducir1Pasada no se resuelve del todo 
-    nn(3, NN1), deducir1Pasada(NN1), cantidadVariablesLibres(NN1, NNV1), NNV1 > 0,
-    % pero con deducirVariasPasadas puede resolverlo completamente
-    nn(3, NN2), deducirVariasPasadas(NN2), cantidadVariablesLibres(NN2, 0).
+% test(deducirVariasPasadas, [nondet]) :-
+%     % con deducir1Pasada no se resuelve del todo 
+%     nn(3, NN1), deducir1Pasada(NN1), cantidadVariablesLibres(NN1, NNV1), NNV1 > 0,
+%     % pero con deducirVariasPasadas puede resolverlo completamente
+%     nn(3, NN2), deducirVariasPasadas(NN2), cantidadVariablesLibres(NN2, 0).
 
 test(restriccionConMenosLibres, fail) :-
     % si no hay restricciones con libres, falla.

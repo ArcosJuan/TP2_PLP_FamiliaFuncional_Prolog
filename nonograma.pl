@@ -108,7 +108,7 @@ deducirVariasPasadasCont(NN, A, B) :- A =\= B, deducirVariasPasadas(NN).
 listar_restricciones(RS, X) :- length(RS, LEN), between(1, LEN, N), nth1(N, RS, X).
 
 restriccionConMenosLibres(nono(_, RS), R) :- listar_restricciones(RS, R), R = r(_, CELDAS), cantidadVariablesLibres(CELDAS, FV), FV > 0,
-	not((listar_restricciones(RS, R2), R2 \= R, R2 = r(_, CELDAS_2), cantidadVariablesLibres(CELDAS_2, FV2), FV2 > 0, FV2 < FV)), !.
+	not((listar_restricciones(RS, R2), R2 \= R, R2 = r(_, CELDAS_2), cantidadVariablesLibres(CELDAS_2, FV2), FV2 > 0, FV2 < FV)).
 
 % Ejercicio 9
 resolverDeduciendo(NN) :- completar("Ejercicio 9").
@@ -194,3 +194,8 @@ mostrarFila(Fila) :-
 mostrarCelda(C) :- nonvar(C), C = x, write('██').
 mostrarCelda(C) :- nonvar(C), C = o, write('░░').
 mostrarCelda(C) :- var(C), write('¿?').
+
+% Predicado para Ejercicio 11.
+% Tamaño de una matriz.
+% tam(-N, -T)
+tam(N, (F, C)) :- nn(N, nono(M, _)), length(M, F), M = [X | _], length(X, C), matriz(F, C, M).
