@@ -118,64 +118,64 @@ test(deducir1Pasada, [nondet]) :-
           [_,x,_]]
         ]).
 
-% test(deducirVariasPasadas, [nondet]) :-
-%     % con deducir1Pasada no se resuelve del todo 
-%     nn(3, NN1), deducir1Pasada(NN1), cantidadVariablesLibres(NN1, NNV1), NNV1 > 0,
-%     % pero con deducirVariasPasadas puede resolverlo completamente
-%     nn(3, NN2), deducirVariasPasadas(NN2), cantidadVariablesLibres(NN2, 0).
-% 
-% test(restriccionConMenosLibres, fail) :-
-%     % si no hay restricciones con libres, falla.
-%     restriccionConMenosLibres(
-%         nono(_, [r([], [x]), 
-%                  r([], [o])
-%                 ], _), _).
-% 
-% test(restriccionConMenosLibres, [nondet]) :-
-%     % NOTA: asume que ni la matriz, ni la restricción afectan el resultado.
-%     %       se usa la restricción como identificador.
-%     soluciones(R,
-%         restriccionConMenosLibres(
-%             nono(_, [r([2], [A,B]),
-%                      r([1], [x,x])
-%                     ]), R), 
-%         % la restricción resultante tiene que tener alguna variable libre
-%         % por eso r([1], [x,x]) no es el resultado correcto.
-%         [r([2], [A,B])]).
-% 
-% test(restriccionConMenosLibres, [nondet]) :-
-%     % NOTA: asume que ni la matriz, ni la restricción afectan el resultado.
-%     %       se usa la restricción como identificador.
-%     soluciones(R,
-%         restriccionConMenosLibres(
-%             nono(_, [r([1], [x,A]),
-%                      r([2], [_,_])
-%                     ]), R), 
-%         [r([1], [x,A])]).
-% 
-% test(restriccionConMenosLibres, [nondet]) :-
-%     % NOTA: asume que ni la matriz, ni la restricción afectan el resultado.
-%     %       se usa la restricción como identificador.
-%     soluciones(R,
-%         restriccionConMenosLibres(
-%             nono(_, [r([2], [_,_]),
-%                      r([1], [x,A])
-%                     ]), R), 
-%         [r([1], [x,A])]).
-% 
-% test(restriccionConMenosLibres, [nondet]) :-
-%     % NOTA: asume que ni la matriz, ni la restricción afectan el resultado.
-%     %       se usa la restricción como identificador.
-%     soluciones(R,
-%         restriccionConMenosLibres(
-%             nono(_, [r([1], [A,x]),
-%                      r([2], [x,B])
-%                     ]), R), 
-%         % Ambas restricciones tienen la misma cantidad de variables libres
-%         [r([1], [A,x]), 
-%          r([2], [x,B])
-%         ]).
-% 
+test(deducirVariasPasadas, [nondet]) :-
+    % con deducir1Pasada no se resuelve del todo 
+    nn(3, NN1), deducir1Pasada(NN1), cantidadVariablesLibres(NN1, NNV1), NNV1 > 0,
+    % pero con deducirVariasPasadas puede resolverlo completamente
+    nn(3, NN2), deducirVariasPasadas(NN2), cantidadVariablesLibres(NN2, 0).
+
+test(restriccionConMenosLibres, fail) :-
+    % si no hay restricciones con libres, falla.
+    restriccionConMenosLibres(
+        nono(_, [r([], [x]), 
+                 r([], [o])
+                ], _), _).
+
+test(restriccionConMenosLibres, [nondet]) :-
+    % NOTA: asume que ni la matriz, ni la restricción afectan el resultado.
+    %       se usa la restricción como identificador.
+    soluciones(R,
+        restriccionConMenosLibres(
+            nono(_, [r([2], [A,B]),
+                     r([1], [x,x])
+                    ]), R), 
+        % la restricción resultante tiene que tener alguna variable libre
+        % por eso r([1], [x,x]) no es el resultado correcto.
+        [r([2], [A,B])]).
+
+test(restriccionConMenosLibres, [nondet]) :-
+    % NOTA: asume que ni la matriz, ni la restricción afectan el resultado.
+    %       se usa la restricción como identificador.
+    soluciones(R,
+        restriccionConMenosLibres(
+            nono(_, [r([1], [x,A]),
+                     r([2], [_,_])
+                    ]), R), 
+        [r([1], [x,A])]).
+
+test(restriccionConMenosLibres, [nondet]) :-
+    % NOTA: asume que ni la matriz, ni la restricción afectan el resultado.
+    %       se usa la restricción como identificador.
+    soluciones(R,
+        restriccionConMenosLibres(
+            nono(_, [r([2], [_,_]),
+                     r([1], [x,A])
+                    ]), R), 
+        [r([1], [x,A])]).
+
+test(restriccionConMenosLibres, [nondet]) :-
+    % NOTA: asume que ni la matriz, ni la restricción afectan el resultado.
+    %       se usa la restricción como identificador.
+    soluciones(R,
+        restriccionConMenosLibres(
+            nono(_, [r([1], [A,x]),
+                     r([2], [x,B])
+                    ]), R), 
+        % Ambas restricciones tienen la misma cantidad de variables libres
+        [r([1], [A,x]), 
+         r([2], [x,B])
+        ]).
+
 % test(resolverDeduciendo, [nondet]) :-
 %     nn(10, NN), NN=nono(M, _),
 %     findall(M, resolverDeduciendo(NN), MS),
@@ -190,10 +190,10 @@ test(deducir1Pasada, [nondet]) :-
 % 
 % test(solucionUnica, fail) :-
 %     nn(10, NN), solucionUnica(NN).
-% 
-% % Similar a findall/3 pero compara con un conjunto 
-% % esperado independientemente del orden.
-% % Acepta soluciones parcialmente instanciadas, se comparan con =@=/2.
+
+% Similar a findall/3 pero compara con un conjunto 
+% esperado independientemente del orden.
+% Acepta soluciones parcialmente instanciadas, se comparan con =@=/2.
 soluciones(L, G, S) :- 
     findall(L, G, LS), 
     msort(LS, LSS), 
@@ -203,5 +203,3 @@ soluciones(L, G, S) :-
      fail).
 
 :- end_tests(nonograma).
-
-
