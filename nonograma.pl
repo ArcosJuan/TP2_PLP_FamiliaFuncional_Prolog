@@ -1,9 +1,6 @@
-
-
 % Ejercicio 1
 matriz(0,_,[]).
-matriz(1,C,[R]) :- length(R, C).
-matriz(F, C, [H|T]) :- length(H, C), X is F-1, matriz(X, C, T).
+matriz(F, C, [H|T]) :- F > 0, length(H, C), X is F-1, matriz(X, C, T).
 
 % Ejercicio 2
 replicar(_, 0, []).
@@ -70,9 +67,17 @@ pintadasValidas(r(R, [L|Ls]), NO, MB) :-
 % Ejercicio 5
 resolverNaive(nono(_, R)) :- maplist(pintadasValidas, R). 
 
-
 % Ejercicio 6
-pintarObligatorias(_) :- completar("Ejercicio 6").
+pintarObligatorias(r([], CELDAS)) :- length(CELDAS, N), replicar(o, N, CELDAS).
+pintarObligatorias(r([R], CELDAS)) :- armar_combinaciones(r([R], CELDAS), COMB), reducir_combinaciones(COMB, CELDAS).
+
+armar_combinaciones(r([R], CELDAS), Y) :- bagof(CELDAS, pintadasValidas(r([R], CELDAS)), X), transponer(X, Y).
+
+reducir_celdas([X], X).
+reducir_celdas([L | LS], X) :- reducir_celdas(LS, Y), combinarCelda(L, Y, X).
+
+reducir_combinaciones([X], [Y]) :- reducir_celdas(X, Y).
+reducir_combinaciones([L | LS], Y) :- reducir_celdas(L, A), reducir_combinaciones(LS, Z), append([A], Z, Y).
 
 % Predicado dado combinarCelda/3
 combinarCelda(A, B, _) :- var(A), var(B).
