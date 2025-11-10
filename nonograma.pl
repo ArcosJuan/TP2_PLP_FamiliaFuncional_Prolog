@@ -68,16 +68,17 @@ pintadasValidas(r(R, [L|Ls]), NO, MB) :-
 resolverNaive(nono(_, R)) :- maplist(pintadasValidas, R). 
 
 % Ejercicio 6
-pintarObligatorias(r([], CELDAS)) :- length(CELDAS, N), replicar(o, N, CELDAS).
-pintarObligatorias(r([R], CELDAS)) :- armar_combinaciones(r([R], CELDAS), COMB), reducir_combinaciones(COMB, CELDAS).
+pintarObligatorias(r(R, CELDAS)) :- 
+	armar_combinaciones(r(R, CELDAS), COMB),
+	reducir_combinaciones(COMB, CELDAS).
 
-armar_combinaciones(r([R], CELDAS), Y) :- bagof(CELDAS, pintadasValidas(r([R], CELDAS)), X), transponer(X, Y).
+armar_combinaciones(r(R, CELDAS), Y) :- bagof(CELDAS, pintadasValidas(r(R, CELDAS)), X), transponer(X, Y).
 
 reducir_celdas([X], X).
 reducir_celdas([L | LS], X) :- reducir_celdas(LS, Y), combinarCelda(L, Y, X).
 
 reducir_combinaciones([X], [Y]) :- reducir_celdas(X, Y).
-reducir_combinaciones([L | LS], Y) :- reducir_celdas(L, A), reducir_combinaciones(LS, Z), append([A], Z, Y).
+reducir_combinaciones([L | LS], [A|Z]) :- reducir_celdas(L, A), reducir_combinaciones(LS, Z).
 
 % Predicado dado combinarCelda/3
 combinarCelda(A, B, _) :- var(A), var(B).
