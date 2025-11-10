@@ -105,10 +105,19 @@ deducirVariasPasadasCont(_, A, A). % Si VI = VF entonces no hubo más cambios y 
 deducirVariasPasadasCont(NN, A, B) :- A =\= B, deducirVariasPasadas(NN).
 
 % Ejercicio 8: R va a ser la restriccion con menor cantidad de variables no instanciadas si no hay ninguna otra restriccion con menos variables no instanciadas.
-listar_restricciones(RS, X) :- length(RS, LEN), between(1, LEN, N), nth1(N, RS, X).
-
-restriccionConMenosLibres(nono(_, RS), R) :- listar_restricciones(RS, R), R = r(_, CELDAS), cantidadVariablesLibres(CELDAS, FV), FV > 0,
-	not((listar_restricciones(RS, R2), R2 \= R, R2 = r(_, CELDAS_2), cantidadVariablesLibres(CELDAS_2, FV2), FV2 > 0, FV2 < FV)).
+restriccionConMenosLibres(nono(_, RS), R) :- 
+	nth1(I1, RS, R),
+	R = r(_, CELDAS),
+	cantidadVariablesLibres(CELDAS, FV),
+	FV > 0,
+	not( (
+		nth1(I2, RS, R2),
+		I1 \= I2,
+		R2 = r(_, CELDAS_2),
+		cantidadVariablesLibres(CELDAS_2, FV2),
+		FV2 > 0,
+		FV2 < FV
+	) ).
 
 % Ejercicio 9
 resolverDeduciendo(NN) :- completar("Ejercicio 9").
