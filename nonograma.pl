@@ -1,23 +1,40 @@
 % Ejercicio 1
 matriz(0,_,[]).
-matriz(F, C, [H|T]) :- F > 0, length(H, C), X is F-1, matriz(X, C, T).
+matriz(Filas, Columnas, [Fila | Resto]) :-
+	Filas > 0,
+	length(Fila, Columnas),
+	F1 is Filas-1,
+	matriz(F1, Columnas, Resto).
 
 % Ejercicio 2
 replicar(_, 0, []).
-replicar(E, N, [E|L]) :- X is N-1, replicar(E,X,L).
+replicar(Elemento, Cantidad, [Elemento | Resto]) :-
+	Cantidad > 0,
+	C1 is Cantidad-1,
+	replicar(Elemento, C1, Resto).
 
 % Ejercicio 3
-nth_columna([],_,[]).
-nth_columna([FILA|M], N, [C | COL]) :-  nth1(N, FILA, C), nth_columna(M,N,COL).
+obtener_columna_n([],_,[]).
+obtener_columna_n([FilaActual | RestoMatriz], NumeroColumna, [Columna | RestoColumnas]) :-  
+	nth1(NumeroColumna, FilaActual, Columna),
+	obtener_columna_n(RestoMatriz, NumeroColumna, RestoColumnas).
 
-primeras_n_columnas(_,0,[]).
-primeras_n_columnas(M,N,[C|COLS]) :- NS is N-1, nth_columna(M,N,C), primeras_n_columnas(M,NS,COLS).
+primeras_n_columnas(_, 0, []).
+primeras_n_columnas(Matriz, Cantidad, [Columna | RestoColumnas]) :- 
+	C1 is Cantidad-1,
+	obtener_columna_n(Matriz, Cantidad, Columna),
+	primeras_n_columnas(Matriz, C1, RestoColumnas).
 
-reverse([],[]).
-reverse([E|LS], REV) :- reverse(LS,X), append(X,[E],REV).
+reverse([], []).
+reverse([Elemento | Lista], Reversa) :-
+	reverse(Lista, XS),
+	append(XS, [Elemento], Reversa).
 
-transponer([],[]).
-transponer([FILA|M], MT) :- length(FILA,N), primeras_n_columnas([FILA|M],N,MATRIZ), reverse(MATRIZ, MT).
+transponer([], []).
+transponer([Fila | RestoMatriz], Transpuesta) :-
+	length(Fila, CantColumnas),
+	primeras_n_columnas([Fila | RestoMatriz], CantColumnas, Matriz),
+	reverse(Matriz, Transpuesta).
 
 % Predicado dado armarNono/3
 armarNono(RF, RC, nono(M, RS)) :-
@@ -33,52 +50,64 @@ zipR([], [], []).
 zipR([R|RT], [L|LT], [r(R,L)|T]) :- zipR(RT, LT, T).
 
 % Ejercicio 4
-suma_reestricciones(r(XS, _), SUMA) :- sum_list(XS, SUMA).
+suma_reestricciones(r(Restriccion, _), Pintadas) :-
+	sum_list(Restriccion, Pintadas).
 
-cantidad_blancos(r(XS, L), X) :- length(L, LEN),
-	suma_reestricciones(r(XS, L), SUM_R),
-	X is LEN - SUM_R.
+cantidad_blancos(r(Restriccion, Celdas), Blancos) :-
+	length(Celdas, Largo),
+	suma_reestricciones(r(Restriccion, Celdas), Pintadas),
+	Blancos is Largo - Pintadas.
 
-pintadasValidas(r(R, L)) :- 
-	cantidad_blancos(r(R,L), MB),
-	between(0, MB, NO),
-	pintadasValidas(r(R, L), NO, MB).
+pintadasValidas(r(Restriccion, Celdas)) :- 
+	cantidad_blancos(r(Restriccion, Celdas), Blancos),
+	between(0, Blancos, CantidadEspacios),
+	pintadasValidas(r(Restriccion, Celda), CantidadEspacios, Blancos).
 
-pintadasValidas(r([], L), 0, 0) :- length(L, LEN), replicar(o, LEN, L).
+pintadasValidas(r([], Celdas), 0, 0) :-
+	length(Celdas, Largo),
+	replicar(o, Largo, Celdas).
 
 pintadasValidas(r([0], []), 0, _).
 
-pintadasValidas(r([R|Rs], [L|Ls]), 0, MB) :-
-	NR is R-1,
-	L=x,
-	pintadasValidas(r([NR|Rs], Ls), 0, MB).
+pintadasValidas(r([Restriccion | RestoRestricciones], [Celda | RestoCeldas]), 0, Blancos) :-
+	CantidadPintados is Restriccion-1,
+	Celda = x,
+	pintadasValidas(r([CantidadPintados | RestoRestricciones], RestoCeldas), 0, Blancos).
 
-pintadasValidas(r([0|Rs], L), 0, MB) :-
-	between(1, MB, NO),	
-	pintadasValidas(r(Rs, L), NO, MB).
+pintadasValidas(r([0 | Restricciones], Celdas), 0, Blancos) :-
+	between(1, Blancos, CantidadEspacios),
+	pintadasValidas(r(Restricciones, Celdas), CantidadEspacios, Blancos).
 
-pintadasValidas(r(R, [L|Ls]), NO, MB) :- 
-	L=o,
-	NMB is MB -1,
-	NO>0,
-	NNO is NO-1,
-	pintadasValidas(r(R, Ls), NNO, NMB).
+pintadasValidas(r(Restriccion, [Celda | RestoCeldas]), CantidadEspacios, Blancos) :- 
+	Celda = o,
+	N_Blancos is Blancos - 1,
+	CantidadEspacios > 0,
+	N_CantidadEspacios is CantidadEspacios-1,
+	pintadasValidas(r(Restriccion, RestoCeldas), N_CantidadEspacios, N_Blancos).
 
 % Ejercicio 5
-resolverNaive(nono(_, R)) :- maplist(pintadasValidas, R). 
+resolverNaive(nono(_, Restricciones)) :-
+	maplist(pintadasValidas, Restricciones).
 
 % Ejercicio 6
-pintarObligatorias(r(R, CELDAS)) :- 
-	armar_combinaciones(r(R, CELDAS), COMB),
-	reducir_combinaciones(COMB, CELDAS).
+pintarObligatorias(r(Restriccion, Celdas)) :- 
+	armar_combinaciones(r(Restriccion, Celdas), Combinaciones),
+	reducir_combinaciones(Combinaciones, Celdas).
 
-armar_combinaciones(r(R, CELDAS), Y) :- bagof(CELDAS, pintadasValidas(r(R, CELDAS)), X), transponer(X, Y).
+armar_combinaciones(r(Restriccion, Celdas), X) :-
+	bagof(Celdas, pintadasValidas(r(Restriccion, Celdas)), Matriz),
+	transponer(Matriz, X).
 
-reducir_celdas([X], X).
-reducir_celdas([L | LS], X) :- reducir_celdas(LS, Y), combinarCelda(L, Y, X).
+reducir_combinaciones([Celda], [CeldaReducida]) :-
+	reducir_celdas(Celda, CeldaReducida).
+reducir_combinaciones([Celda | RestoCeldas], [CeldaReducida | RestoReducidas]) :-
+	reducir_celdas(Celda, CeldaReducida),
+	reducir_combinaciones(RestoCeldas, RestoReducidas).
 
-reducir_combinaciones([X], [Y]) :- reducir_celdas(X, Y).
-reducir_combinaciones([L | LS], [A|Z]) :- reducir_celdas(L, A), reducir_combinaciones(LS, Z).
+reducir_celdas([Celda], Celda).
+reducir_celdas([Celda | RestoCeldas], CeldaReducida) :-
+	reducir_celdas(RestoCeldas, XS),
+	combinarCelda(Celda, XS, CeldaReducida).
 
 % Predicado dado combinarCelda/3
 combinarCelda(A, B, _) :- var(A), var(B).
@@ -88,7 +117,8 @@ combinarCelda(A, B, A) :- nonvar(A), nonvar(B), A = B.
 combinarCelda(A, B, _) :- nonvar(A), nonvar(B), A \== B.
 
 % Ejercicio 7
-deducir1Pasada(nono(_, R)) :- maplist(pintarObligatorias, R).
+deducir1Pasada(nono(_, Restricciones)) :-
+	maplist(pintarObligatorias, Restricciones).
 
 % Predicado dado
 cantidadVariablesLibres(T, N) :- term_variables(T, LV), length(LV, N).
@@ -106,36 +136,35 @@ deducirVariasPasadasCont(_, A, A). % Si VI = VF entonces no hubo más cambios y 
 deducirVariasPasadasCont(NN, A, B) :- A =\= B, deducirVariasPasadas(NN).
 
 % Ejercicio 8: R va a ser la restriccion con menor cantidad de variables no instanciadas si no hay ninguna otra restriccion con menos variables no instanciadas.
-restriccionConMenosLibres(nono(_, RS), R) :- 
-	nth1(I1, RS, R),
-	R = r(_, CELDAS),
-	cantidadVariablesLibres(CELDAS, FV),
-	FV > 0,
+restriccionConMenosLibres(nono(_, Restricciones), R) :- 
+	nth1(Indice1, Restricciones, R),
+	R = r(_, Celdas),
+	cantidadVariablesLibres(Celdas, VariablesLibres),
+	VariablesLibres > 0,
 	not( (
-		nth1(I2, RS, R2),
-		I1 \= I2,
-		R2 = r(_, CELDAS_2),
-		cantidadVariablesLibres(CELDAS_2, FV2),
-		FV2 > 0,
-		FV2 < FV
+		nth1(Indice2, Restricciones, R2),
+		Indice1 \= Indice2,
+		R2 = r(_, Celdas2),
+		cantidadVariablesLibres(Celdas2, VariablesLibres2),
+		VariablesLibres2 > 0,
+		VariablesLibres2 < VariablesLibres
 	) ).
 
 % Ejercicio 9
 resolverDeduciendo(NN) :-
 	deducirVariasPasadas(NN),
 	not(restriccionConMenosLibres(NN, _)).
-resolverDeduciendo(nono(M, RS)) :- 
-	deducirVariasPasadas(nono(M, RS)),
-	restriccionConMenosLibres(nono(M, RS), r(R, C)),
+resolverDeduciendo(nono(Matriz, Restricciones)) :- 
+	deducirVariasPasadas(nono(Matriz, Restricciones)),
+	restriccionConMenosLibres(nono(Matriz, Restricciones), r(Restriccion, Celdas)),
 	!,
-	pintadasValidas(r(R, C)),
-	resolverDeduciendo(nono(M, RS))
-	.
+	pintadasValidas(r(Restriccion, Celdas)),
+	resolverDeduciendo(nono(Matriz, Restricciones)).
 
 % Ejercicio 10
 solucionUnica(NN) :- 
-	setof(NN, resolverDeduciendo(NN), S),
-	length(S, 1).
+	bagof(NN, resolverDeduciendo(NN), Solucion),
+	length(Solucion, 1).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %                              %
