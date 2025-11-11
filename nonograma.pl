@@ -61,7 +61,7 @@ cantidad_blancos(r(Restriccion, Celdas), Blancos) :-
 pintadasValidas(r(Restriccion, Celdas)) :- 
 	cantidad_blancos(r(Restriccion, Celdas), Blancos),
 	between(0, Blancos, CantidadEspacios),
-	pintadasValidas(r(Restriccion, Celda), CantidadEspacios, Blancos).
+	pintadasValidas(r(Restriccion, Celdas), CantidadEspacios, Blancos).
 
 pintadasValidas(r([], Celdas), 0, 0) :-
 	length(Celdas, Largo),
@@ -248,4 +248,9 @@ mostrarCelda(C) :- var(C), write('¿?').
 % Predicado para Ejercicio 11.
 % Tamaño de una matriz.
 % tam(-N, -T)
-tam(N, (F, C)) :- nn(N, nono(M, _)), length(M, F), M = [X | _], length(X, C), matriz(F, C, M).
+tam(NumeroNono, (CantFilas, CantColumnas)) :-
+	nn(NumeroNono, nono(Matriz, _)),
+	length(Matriz, CantFilas),
+	Matriz = [Fila | _],
+	length(Fila, CantColumnas),
+	matriz(CantFilas, CantColumnas, Matriz).
