@@ -121,10 +121,21 @@ restriccionConMenosLibres(nono(_, RS), R) :-
 	) ).
 
 % Ejercicio 9
-resolverDeduciendo(NN) :- completar("Ejercicio 9").
+resolverDeduciendo(NN) :-
+	deducirVariasPasadas(NN),
+	not(restriccionConMenosLibres(NN, _)).
+resolverDeduciendo(nono(M, RS)) :- 
+	deducirVariasPasadas(nono(M, RS)),
+	restriccionConMenosLibres(nono(M, RS), r(R, C)),
+	!,
+	pintadasValidas(r(R, C)),
+	resolverDeduciendo(nono(M, RS))
+	.
 
 % Ejercicio 10
-solucionUnica(NN) :- completar("Ejercicio 10").
+solucionUnica(NN) :- 
+	setof(NN, resolverDeduciendo(NN), S),
+	length(S, 1).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %                              %
