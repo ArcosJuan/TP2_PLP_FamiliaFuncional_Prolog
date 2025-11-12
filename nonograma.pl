@@ -50,6 +50,9 @@ zipR([], [], []).
 zipR([R|RT], [L|LT], [r(R,L)|T]) :- zipR(RT, LT, T).
 
 % Ejercicio 4
+% La idea general de la solución es partir con una cantidad arbitraria, entre 0 y la cantidad maxima de espacios en blanco (o), 
+% luego, si debe haber espacios en blanco entonces unificar con una lista que los tenga. Va tomando las restricciones una a una,
+% reduce la reestriccion que toma hasta que llega a 0 y de nuevo añade espacios en blanco y repite hasta llegar al final.
 suma_reestricciones(r(Restriccion, _), Pintadas) :-
 	sum_list(Restriccion, Pintadas).
 
@@ -63,21 +66,26 @@ pintadasValidas(r(Restriccion, Celdas)) :-
 	between(0, Blancos, CantidadEspacios),
 	pintadasValidas(r(Restriccion, Celdas), CantidadEspacios, Blancos).
 
+% Si no hay restricciones entonces las celdas son todas o.
 pintadasValidas(r([], Celdas), 0, 0) :-
 	length(Celdas, Largo),
 	replicar(o, Largo, Celdas).
 
 pintadasValidas(r([0], []), 0, _).
 
+% Si la restricion no fue totalmente reducida entonces la reduce y añade la x correspondiente a la celda.
 pintadasValidas(r([Restriccion | RestoRestricciones], [Celda | RestoCeldas]), 0, Blancos) :-
 	CantidadPintados is Restriccion-1,
 	Celda = x,
 	pintadasValidas(r([CantidadPintados | RestoRestricciones], RestoCeldas), 0, Blancos).
 
+% Si la restricción ya fue reducida a 0 entonces añade una cantidad de espacios vacios arbitraria y 
+% prueba pintadas validas con esos espacios vacios.
 pintadasValidas(r([0 | Restricciones], Celdas), 0, Blancos) :-
 	between(1, Blancos, CantidadEspacios),
 	pintadasValidas(r(Restricciones, Celdas), CantidadEspacios, Blancos).
 
+% Si hay espacios vacios por añadir entonces inserta o.
 pintadasValidas(r(Restriccion, [Celda | RestoCeldas]), CantidadEspacios, Blancos) :- 
 	Celda = o,
 	N_Blancos is Blancos - 1,
@@ -94,10 +102,12 @@ pintarObligatorias(r(Restriccion, Celdas)) :-
 	armar_combinaciones(r(Restriccion, Celdas), Combinaciones),
 	reducir_combinaciones(Combinaciones, Celdas).
 
+% En X devuelve una matriz cuyas columnas son todas las posibles combinaciones de x e o en Celdas.
 armar_combinaciones(r(Restriccion, Celdas), X) :-
 	bagof(Celdas, pintadasValidas(r(Restriccion, Celdas)), Matriz),
 	transponer(Matriz, X).
 
+% Reduce una lista de posibles valores de una celda.
 reducir_combinaciones([Celda], [CeldaReducida]) :-
 	reducir_celdas(Celda, CeldaReducida).
 reducir_combinaciones([Celda | RestoCeldas], [CeldaReducida | RestoReducidas]) :-
@@ -141,7 +151,7 @@ restriccionConMenosLibres(nono(_, Restricciones), R) :-
 	R = r(_, Celdas),
 	cantidadVariablesLibres(Celdas, VariablesLibres),
 	VariablesLibres > 0,
-	not( (
+	not( ( % Checkea que no haya otra restricción con menos variables libres.
 		nth1(Indice2, Restricciones, R2),
 		Indice1 \= Indice2,
 		R2 = r(_, Celdas2),
