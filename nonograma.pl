@@ -1,10 +1,10 @@
 % Ejercicio 1
-matriz(0,_,[]).
-matriz(Filas, Columnas, [Fila | Resto]) :-
-	Filas > 0,
-	length(Fila, Columnas),
-	F1 is Filas-1,
-	matriz(F1, Columnas, Resto).
+matriz(Filas, Columnas, M) :- 
+	length(M, Filas), 
+	maplist((length_inv(Columnas)), M).
+
+length_inv(Len, List) :-
+    length(List, Len).
 
 % Ejercicio 2
 replicar(_, 0, []).
@@ -14,27 +14,18 @@ replicar(Elemento, Cantidad, [Elemento | Resto]) :-
 	replicar(Elemento, C1, Resto).
 
 % Ejercicio 3
-obtener_columna_n([],_,[]).
-obtener_columna_n([FilaActual | RestoMatriz], NumeroColumna, [Columna | RestoColumnas]) :-  
-	nth1(NumeroColumna, FilaActual, Columna),
-	obtener_columna_n(RestoMatriz, NumeroColumna, RestoColumnas).
-
-primeras_n_columnas(_, 0, []).
-primeras_n_columnas(Matriz, Cantidad, [Columna | RestoColumnas]) :- 
-	C1 is Cantidad-1,
-	obtener_columna_n(Matriz, Cantidad, Columna),
-	primeras_n_columnas(Matriz, C1, RestoColumnas).
-
-reverse([], []).
-reverse([Elemento | Lista], Reversa) :-
-	reverse(Lista, XS),
-	append(XS, [Elemento], Reversa).
-
-transponer([], []).
-transponer([Fila | RestoMatriz], Transpuesta) :-
-	length(Fila, CantColumnas),
-	primeras_n_columnas([Fila | RestoMatriz], CantColumnas, Matriz),
-	reverse(Matriz, Transpuesta).
+transponer(M, MT) :- 
+	length(M, Filas), nth1(Filas, M, Fila), length(Fila, Columnas),			% obtener cantidad de Filas y Columnas de M
+	matriz(Columnas, Filas, MT), transponer_rec(Filas, Columnas, M, MT).	% verificar que la matriz transpuesta de M sea matriz con los largos invertidos
+	
+transponer_rec(0, _, _, _).
+transponer_rec(_, 0, _, _).
+transponer_rec(I, J, M, MT) :-
+	I > 0, J > 0, 													% los indices son siempre mayores a 0
+	nth1(I, M, Fila), nth1(J, Fila, Elem), 							% agarrar el elemento I J en la matriz original
+	nth1(J, MT, FilaT),	nth1(I, FilaT, Elem), 						% dicho elemento debe ser el J I en la matriz transpuesta
+	Im1 is I - 1, Jm1 is J - 1,
+	transponer_rec(Im1, J, M, MT), transponer_rec(I, Jm1, M, MT).
 
 % Predicado dado armarNono/3
 armarNono(RF, RC, nono(M, RS)) :-
@@ -151,14 +142,15 @@ restriccionConMenosLibres(nono(_, Restricciones), R) :-
 	R = r(_, Celdas),
 	cantidadVariablesLibres(Celdas, VariablesLibres),
 	VariablesLibres > 0,
-	not( ( % Checkea que no haya otra restricción con menos variables libres.
-		nth1(Indice2, Restricciones, R2),
-		Indice1 \= Indice2,
-		R2 = r(_, Celdas2),
-		cantidadVariablesLibres(Celdas2, VariablesLibres2),
-		VariablesLibres2 > 0,
-		VariablesLibres2 < VariablesLibres
-	) ).
+	not(hayReestriccionConMenosLibres(Indice1, Restricciones, VariablesLibres)). % Checkea que no haya otra restricción con menos variables libres.
+
+hayReestriccionConMenosLibres(Indice1, Restricciones, VariablesLibres) :- 
+	nth1(Indice2, Restricciones, R),
+	Indice1 \= Indice2,
+	R = r(_, Celdas2),
+	cantidadVariablesLibres(Celdas2, VariablesLibres2),
+	VariablesLibres2 > 0,
+	VariablesLibres2 < VariablesLibres.
 
 % Ejercicio 9
 resolverDeduciendo(NN) :-
